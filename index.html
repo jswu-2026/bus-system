@@ -1,1 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>新生醫專校車查詢系統</title>
 
+<style>
+body{font-family:"Microsoft JhengHei";background:#e6f4ff;padding:20px;}
+h1{text-align:center;}
+
+.notice{background:#fff3cd;padding:12px;border-radius:10px;margin-bottom:12px;}
+
+.chips{display:flex;overflow:auto;gap:8px;margin-bottom:10px;}
+.chip{padding:8px 12px;border-radius:20px;background:white;border:1px solid #ccc;cursor:pointer;}
+.chip.active{background:#0284c7;color:white;}
+
+input,select{width:100%;padding:12px;border-radius:10px;border:1px solid #ccc;margin-bottom:10px;}
+
+.card{background:white;padding:12px;border-radius:10px;margin-bottom:8px;}
+.recommend{background:#dff6ff;padding:10px;border-radius:10px;margin-bottom:10px;}
+</style>
+</head>
+
+<body>
+
+<h1>新生醫專校車搭車查詢系統</h1>
+
+<div class="notice">
+<b>說明</b><br>
+說明1：請先依區域快捷按鈕找出距離住家較近的搭車站點。<br>
+說明2：請輸入地址或地標搜尋最近三站。<br>
+說明3：請提早5分鐘到站。
+</div>
+
+<div class="chips" id="areaButtons"></div>
+
+<select id="area"></select>
+<select id="bus"></select>
+
+<input id="search" placeholder="輸入住家地址或地標">
+
+<div id="recommend"></div>
+<div id="result"></div>
+
+<script>
+
+// 🔥 👉 這裡放完整282站資料（你下一步給我我幫你轉）
+const data = [];
+
+// 區域
+const areas=["全部區域"];
+
+// 初始化
+const areaSelect=document.getElementById("area");
+const busSelect=document.getElementById("bus");
+
+// 主程式（先能動）
+function update(){
+document.getElementById("result").innerHTML="請匯入完整資料";
+}
+
+update();
+
+</script>
+
+</body>
+</html>
