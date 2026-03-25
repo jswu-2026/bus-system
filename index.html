@@ -1,1 +1,568 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>新生醫專校車搭車查詢系統</title>
+<style>
+:root {
+  --blue:#0284c7;
+  --line:#d9e2ec;
+  --muted:#64748b;
+  --text:#0f172a;
+  --bg:#f8fafc;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0;
+  font-family:"Microsoft JhengHei","Noto Sans TC",Arial,sans-serif;
+  background:linear-gradient(180deg,#e0f2fe,#f8fafc 240px);
+  color:var(--text);
+}
+.wrap {
+  max-width:760px;
+  margin:0 auto;
+  padding:16px 12px 28px;
+}
+.hero {
+  background:#fff;
+  border:1px solid rgba(2,132,199,.10);
+  box-shadow:0 10px 28px rgba(15,23,42,.08);
+  border-radius:20px;
+  padding:18px;
+}
+.top {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  margin-bottom:14px;
+}
+h1 {
+  margin:0;
+  font-size:28px;
+  line-height:1.25;
+}
+.sub {
+  margin-top:6px;
+  color:var(--muted);
+  font-size:14px;
+}
+.notice {
+  background:#f8fbff;
+  border:1px solid #dbeafe;
+  border-radius:14px;
+  padding:12px 14px;
+  line-height:1.75;
+  font-size:14px;
+  margin-bottom:14px;
+}
+.chips-title {
+  font-size:14px;
+  font-weight:900;
+  color:#334155;
+  margin:0 0 10px;
+}
+.chips {
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-bottom:12px;
+}
+.chip {
+  border:none;
+  background:#e2e8f0;
+  color:#334155;
+  padding:8px 12px;
+  border-radius:999px;
+  font-size:13px;
+  font-weight:800;
+  cursor:pointer;
+}
+.chip.active {
+  background:var(--blue);
+  color:#fff;
+}
+.row2 {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-bottom:4px;
+}
+select {
+  width:100%;
+  padding:12px;
+  border-radius:10px;
+  border:1px solid #ccc;
+  font-size:14px;
+  background:#fff;
+}
+.meta {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin:16px 2px 8px;
+  color:var(--muted);
+  font-size:14px;
+}
+.badge {
+  background:#e0f2fe;
+  color:#0369a1;
+  border-radius:999px;
+  padding:6px 10px;
+  font-weight:800;
+}
+.helper-btn {
+  border:1px solid var(--line);
+  background:#fff;
+  border-radius:999px;
+  padding:7px 12px;
+  cursor:pointer;
+  color:#334155;
+  font-weight:700;
+}
+.group { margin-top:16px; }
+.group-title {
+  display:flex;
+  gap:8px;
+  align-items:center;
+  margin:0 2px 10px;
+  font-size:14px;
+  font-weight:900;
+  color:#334155;
+}
+.dot {
+  width:10px;
+  height:10px;
+  border-radius:999px;
+  background:#0ea5e9;
+}
+.gcount {
+  font-size:11px;
+  color:var(--muted);
+  border:1px solid var(--line);
+  background:#fff;
+  border-radius:999px;
+  padding:2px 8px;
+}
+.card {
+  background:#fff;
+  padding:14px;
+  border-radius:14px;
+  margin-bottom:10px;
+  box-shadow:0 2px 6px rgba(0,0,0,0.08);
+}
+.card-head {
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:10px;
+  margin-bottom:10px;
+}
+.area {
+  font-size:12px;
+  color:#64748b;
+  font-weight:800;
+  margin-bottom:3px;
+}
+.stop {
+  font-size:20px;
+  font-weight:900;
+  line-height:1.3;
+}
+.time {
+  white-space:nowrap;
+  font-size:13px;
+  color:#0f172a;
+  background:#eff6ff;
+  padding:6px 8px;
+  border-radius:10px;
+  font-weight:700;
+}
+.tag {
+  display:inline-block;
+  background:#f1f5f9;
+  border:1px solid #e2e8f0;
+  border-radius:999px;
+  padding:5px 9px;
+  font-size:12px;
+  font-weight:900;
+  color:#334155;
+  margin-bottom:10px;
+}
+.addr {
+  line-height:1.7;
+  color:#334155;
+  font-size:14px;
+}
+.actions {
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+.action {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:96px;
+  padding:10px 14px;
+  border-radius:10px;
+  text-decoration:none;
+  border:none;
+  cursor:pointer;
+  font-size:14px;
+  font-weight:900;
+}
+.copy {
+  background:#e2e8f0;
+  color:#0f172a;
+}
+.nav {
+  background:var(--blue);
+  color:#fff;
+}
+.empty, .import-box {
+  background:#fff;
+  border:1px dashed #cbd5e1;
+  border-radius:20px;
+  padding:16px;
+  color:#475569;
+}
+.import-box { margin-top:16px; }
+.import-box h3 {
+  margin:0 0 8px;
+  font-size:16px;
+}
+.import-box p {
+  margin:0 0 10px;
+  line-height:1.7;
+  font-size:14px;
+}
+textarea {
+  width:100%;
+  min-height:180px;
+  resize:vertical;
+  border:1px solid #cbd5e1;
+  border-radius:12px;
+  padding:12px;
+  font-family:Consolas, monospace;
+  font-size:13px;
+}
+.tools {
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:10px;
+}
+.footer {
+  margin-top:16px;
+  background:#fff;
+  padding:12px;
+  border-radius:12px;
+  font-size:13px;
+  color:#555;
+  border:1px solid var(--line);
+}
+.hidden { display:none; }
+@media(max-width:640px){
+  .row2{grid-template-columns:1fr;}
+  .top{align-items:flex-start;}
+  h1{font-size:22px;}
+  .meta{flex-direction:column;align-items:flex-start;}
+  .card-head{flex-direction:column;}
+  .time{white-space:normal;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hero">
+    <div class="top">
+      <div>
+        <h1>新生醫專校車搭車查詢系統</h1>
+        <div class="sub">新生醫護管理專科學校</div>
+      </div>
+    </div>
 
+    <div class="notice">
+      <b>說明</b><br>
+      說明1：請依區域找出距離住家較近的搭車站點。<br>
+      說明2：請同學提早 10 分鐘到站等車。<br>
+      說明3：本檔保留原始版面查詢邏輯，並加入可直接貼上完整站點資料的匯入功能。
+    </div>
+
+    <div class="chips-title">區域快捷查詢</div>
+    <div class="chips" id="areaButtons"></div>
+
+    <div class="row2">
+      <select id="area"></select>
+      <select id="bus"></select>
+    </div>
+  </div>
+
+  <div class="meta">
+    <span class="badge" id="count">0 筆</span>
+    <button class="helper-btn" id="toggleImport">匯入／更新站點資料</button>
+  </div>
+
+  <div id="result"></div>
+
+  <div class="import-box hidden" id="importBox">
+    <h3>貼上完整站點資料</h3>
+    <p>若您手邊已有 Excel 或 Google 試算表，可直接貼上以下格式：<br>
+    欄位順序：<b>區域、站別、時間、車號、地址</b><br>
+    支援「Tab 分隔」或「逗號分隔 CSV」。貼上後按「套用資料」即可立即更新本頁。</p>
+    <textarea id="rawData">區域	站別	時間	車號	地址
+桃園市桃園區	範例站	06:50	1	桃園市桃園區範例路100號
+桃園市中壢區	範例站2	06:40	2、5	桃園市中壢區範例街88號</textarea>
+    <div class="tools">
+      <button class="helper-btn" id="applyImport">套用資料</button>
+      <button class="helper-btn" id="downloadJson">下載目前資料 JSON</button>
+      <button class="helper-btn" id="resetDemo">回復示範資料</button>
+    </div>
+  </div>
+
+  <div class="footer">
+    備註：「＆、∪」表示鄰接街道，「Δ」表示對向街道。
+  </div>
+</div>
+
+<script>
+const DEMO_DATA = [
+  {"區域":"桃園市桃園區","站別":"範例站","時間":"06:50","車號":"1","地址":"桃園市桃園區範例路100號"},
+  {"區域":"桃園市中壢區","站別":"範例站2","時間":"06:40","車號":"2、5","地址":"桃園市中壢區範例街88號"},
+  {"區域":"桃園市平鎮區","站別":"範例站3","時間":"06:35","車號":"3","地址":"桃園市平鎮區範例路66號"},
+  {"區域":"台北板橋火車站","站別":"板橋火車站","時間":"06:10","車號":"9","地址":"新北市板橋區縣民大道二段7號"}
+];
+
+let data = loadSavedData();
+if (!Array.isArray(data) || data.length === 0) {
+  data = DEMO_DATA.slice();
+}
+
+const areaSelect = document.getElementById("area");
+const busSelect = document.getElementById("bus");
+const resultDiv = document.getElementById("result");
+const areaButtons = document.getElementById("areaButtons");
+const countEl = document.getElementById("count");
+const importBox = document.getElementById("importBox");
+const rawDataEl = document.getElementById("rawData");
+
+function loadSavedData() {
+  try {
+    return JSON.parse(localStorage.getItem("busSystemData") || "[]");
+  } catch (e) {
+    return [];
+  }
+}
+
+function saveData() {
+  localStorage.setItem("busSystemData", JSON.stringify(data));
+}
+
+function matchBus(busText, selectedBus) {
+  if (selectedBus === "全部車號") return true;
+  return String(busText || "").split("、").map(b => b.trim()).includes(selectedBus);
+}
+
+function mapLink(addr) {
+  return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(addr || '');
+}
+
+function copyText(text) {
+  navigator.clipboard.writeText(text || "")
+    .then(() => alert("已複製地址"))
+    .catch(() => alert("複製失敗，請手動複製"));
+}
+
+function parseDelimitedText(text) {
+  const rows = text.trim().split(/\r?\n/).filter(Boolean);
+  if (!rows.length) return [];
+
+  const delimiter = rows[0].includes("\t") ? "\t" : ",";
+  const headers = splitCsvLine(rows[0], delimiter).map(v => v.trim());
+  const need = ["區域", "站別", "時間", "車號", "地址"];
+  const ok = need.every(h => headers.includes(h));
+  if (!ok) throw new Error("欄位必須包含：區域、站別、時間、車號、地址");
+
+  return rows.slice(1).map(line => {
+    const values = splitCsvLine(line, delimiter);
+    const obj = {};
+    headers.forEach((h, i) => obj[h] = (values[i] || "").trim());
+    return {
+      "區域": obj["區域"] || "",
+      "站別": obj["站別"] || "",
+      "時間": obj["時間"] || "",
+      "車號": obj["車號"] || "",
+      "地址": obj["地址"] || ""
+    };
+  }).filter(item => item["區域"] || item["站別"] || item["地址"]);
+}
+
+function splitCsvLine(line, delimiter) {
+  if (delimiter === "\t") return line.split("\t");
+  const result = [];
+  let current = "";
+  let inQuotes = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (ch === '"') {
+      if (inQuotes && line[i + 1] === '"') {
+        current += '"';
+        i++;
+      } else {
+        inQuotes = !inQuotes;
+      }
+    } else if (ch === delimiter && !inQuotes) {
+      result.push(current);
+      current = "";
+    } else {
+      current += ch;
+    }
+  }
+  result.push(current);
+  return result;
+}
+
+function render(list) {
+  resultDiv.innerHTML = "";
+  countEl.textContent = list.length + " 筆";
+
+  if (list.length === 0) {
+    resultDiv.innerHTML = "<div class='empty'>查無資料</div>";
+    return;
+  }
+
+  const grouped = {};
+  list.forEach(d => {
+    const k = d["區域"] || "未分類";
+    if (!grouped[k]) grouped[k] = [];
+    grouped[k].push(d);
+  });
+
+  Object.keys(grouped).forEach(group => {
+    const items = grouped[group];
+    let html = `<div class="group"><div class="group-title"><span class="dot"></span><span>${group}</span><span class="gcount">${items.length} 站</span></div>`;
+
+    items.forEach(d => {
+      html += `
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <div class="area">${d["區域"] || ""}</div>
+            <div class="stop">${d["站別"] || ""}</div>
+          </div>
+          <div class="time">時間：${d["時間"] || ""}</div>
+        </div>
+        <div class="tag">車號 ${d["車號"] || ""}</div>
+        <div class="addr"><b>地址</b><br>${d["地址"] || ""}</div>
+        <div class="actions">
+          <button class="action copy" data-copy="${encodeURIComponent(d["地址"] || "")}">複製地址</button>
+          <a class="action nav" href="${mapLink(d["地址"] || d["站別"] || "")}" target="_blank">導航</a>
+        </div>
+      </div>`;
+    });
+
+    html += `</div>`;
+    resultDiv.innerHTML += html;
+  });
+
+  resultDiv.querySelectorAll("[data-copy]").forEach(btn => {
+    btn.onclick = () => copyText(decodeURIComponent(btn.getAttribute("data-copy")));
+  });
+}
+
+function updateBus() {
+  let list = [];
+  data.forEach(d => {
+    if (areaSelect.value === "全部區域" || d["區域"] === areaSelect.value) {
+      String(d["車號"] || "").split("、").forEach(b => list.push(b.trim()));
+    }
+  });
+  const unique = [...new Set(list.filter(Boolean))].sort((a, b) => String(a).localeCompare(String(b), 'zh-Hant-u-nu-latn'));
+  busSelect.innerHTML = "<option>全部車號</option>" + unique.map(b => `<option>${b}</option>`).join("");
+}
+
+function rebuildAreaUI() {
+  const areas = ["全部區域", ...new Set(data.map(d => d["區域"]).filter(Boolean))];
+  areaSelect.innerHTML = areas.map(a => `<option>${a}</option>`).join("");
+  areaButtons.innerHTML = "";
+
+  areas.forEach((a, i) => {
+    const btn = document.createElement("button");
+    btn.className = "chip" + (i === 0 ? " active" : "");
+    btn.innerText = a;
+    btn.onclick = () => {
+      areaSelect.value = a;
+      document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+      btn.classList.add("active");
+      updateBus();
+      filter();
+    };
+    areaButtons.appendChild(btn);
+  });
+}
+
+function filter() {
+  const area = areaSelect.value;
+  const bus = busSelect.value;
+  const res = data.filter(d => {
+    return (area === "全部區域" || d["區域"] === area) && matchBus(d["車號"], bus);
+  });
+  render(res);
+}
+
+function refreshAll() {
+  rebuildAreaUI();
+  updateBus();
+  filter();
+}
+
+areaSelect.onchange = () => {
+  document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+  const target = [...document.querySelectorAll(".chip")].find(c => c.innerText === areaSelect.value);
+  if (target) target.classList.add("active");
+  updateBus();
+  filter();
+};
+busSelect.onchange = filter;
+
+document.getElementById("toggleImport").onclick = () => {
+  importBox.classList.toggle("hidden");
+};
+
+document.getElementById("applyImport").onclick = () => {
+  try {
+    const parsed = parseDelimitedText(rawDataEl.value);
+    if (!parsed.length) throw new Error("沒有可匯入的資料");
+    data = parsed;
+    saveData();
+    refreshAll();
+    alert("資料已更新");
+  } catch (e) {
+    alert("匯入失敗：" + e.message);
+  }
+};
+
+document.getElementById("downloadJson").onclick = () => {
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'bus-data.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+};
+
+document.getElementById("resetDemo").onclick = () => {
+  data = DEMO_DATA.slice();
+  saveData();
+  refreshAll();
+  alert("已回復示範資料");
+};
+
+refreshAll();
+</script>
+</body>
+</html>
